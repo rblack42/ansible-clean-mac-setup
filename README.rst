@@ -1,22 +1,31 @@
-Ansible mac Clean Setup
+Ansible Mac Clean Setup
 #######################
 
-This is an *Ansible* playbook that I use to initialize a Mac after a clean setup. I used this proceedure to zero out my teaching Macs after each term so I could start with a fresh known state for my developkment system
+:Author: Roie R. Black
+:Email: roie.black@gmail.com
+:Repo: https://github.com/rblack42/ansible-clean-mac-setup.git
+:Docs: https://rblack42.github.io/ansible-clean-mac-setup
 
-Most of the code here is based on the work of Jeff Geerling (geerlingguy) who actually inspired me to include *Ansible* in my teaching.
+This project details the development of an *Ansible* playbook that I use to
+initialize a Mac after a clean setup. I used this procedure to zero out my
+teaching Macs after each term so I could start with a fresh known state for my
+development system before starting teaching in a new term.
+
+Most of the code here is based on the work of Jeff Geerling (geerlingguy) who
+actually inspired me to include *Ansible* in my teaching.
 
 Why Not Just Use Jeff's Playbooks?
 ==================================
 
 I am an educator. Because of that, most of what I write is aimed at teaching the
-reader how things work, not just getting a job done. Ultimately, I want my students to write
-documentation for their projects that explains why their project came into
-being, how it was designed, and how it works. All of this is hugely useful to
-those who will use and maintain their projects long after the original creators
-have left the project. My intent, here, is to provide a step-by-step guide that
-will perform the desired system setup in a way that you will fully understand.
-Furthermore, you will see exactly where you might need to make changes to my
-code to tune the system to your particular needs.
+reader how things work, not just getting a job done. Ultimately, I want my
+students to write documentation for their projects that explains why their
+project came into being, how it was designed, and how it works. All of this is
+hugely useful to those who will use and maintain their projects long after the
+original creators have left the project. My intent, here, is to provide a
+step-by-step guide that will perform the desired system setup in a way that you
+will fully understand.  Furthermore, you will see exactly where you might need
+to make changes to my code to tune the system to your particular needs.
 
 Starting Point
 ==============
@@ -39,7 +48,7 @@ primary documentation system.
 Issues
 ======
 
-If yoy try this project out on your own system and run into any problems, please
+If you try this project out on your own system and run into any problems, please
 use the **issue** tool on *GitHub* to let me know. I will try to fix any
 problems discovered as soon as I can. 
 

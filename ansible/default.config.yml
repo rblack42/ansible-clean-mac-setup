@@ -1,0 +1,4 @@
+---
+sudoers_custom_config: |
+  %admin ALL=(ALL) NOPASSWD: ALL
+

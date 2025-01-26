@@ -1,0 +1,18 @@
+---
+- name: install simple tools with brew
+  homebrew:
+    name:
+      - gh
+      - pygments
+      - wget
+    state: latest
+    update_homebrew: no
+
+- name: install homebrew cask applications
+  homebrew_cask:
+    name:
+      - mactex
+      - dropbox
+      - google-chrome
+      - 1password
+      - iterm2
