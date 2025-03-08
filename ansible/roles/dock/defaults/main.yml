@@ -1,0 +1,12 @@
+---
+dockitems_remove:
+  - Launchpad
+  - TV
+  - Podcasts
+  - 'App Store'
+
+docitems_persist:
+  - name: 1Password
+    path: "/Applications/1password.app"
+    pos: 5
+  

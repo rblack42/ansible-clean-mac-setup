@@ -11,3 +11,5 @@ Ansible: Clean Mac Setup
     :caption: Contents:
 
     content/my-development-workflow
+    content/homebrew-installer
+    content/ansible-testing-on-github

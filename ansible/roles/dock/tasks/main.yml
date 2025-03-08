@@ -1,0 +1,6 @@
+---
+- name: Install DockUtil
+  homebrew:
+    name: dockutil
+    state: present
+

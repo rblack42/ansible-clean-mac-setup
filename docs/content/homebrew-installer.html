@@ -1,0 +1,410 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unpacking the Standard Homebrew Install Script &mdash; Ansible: Clean Mac Setup 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Ansible Testing on Github" href="ansible-testing-on-github.html" />
+    <link rel="prev" title="My Development Workflow" href="my-development-workflow.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Ansible: Clean Mac Setup
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="my-development-workflow.html">My Development Workflow</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Unpacking the Standard Homebrew Install Script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ansible-testing-on-github.html">Ansible Testing on Github</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Ansible: Clean Mac Setup</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Unpacking the Standard Homebrew Install Script</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/content/homebrew-installer.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="unpacking-the-standard-homebrew-install-script">
+<h1>Unpacking the Standard Homebrew Install Script<a class="headerlink" href="#unpacking-the-standard-homebrew-install-script" title="Link to this heading"></a></h1>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="ch">#!/bin/bash</span>
+<span class="linenos">2</span>
+<span class="linenos">3</span><span class="c1"># We don&#39;t need return codes for &quot;$(command)&quot;, only stdout is needed.</span>
+<span class="linenos">4</span><span class="c1"># Allow `[[ -n &quot;$(command)&quot; ]]`, `func &quot;$(command)&quot;`, pipes, etc.</span>
+<span class="linenos">5</span><span class="c1"># shellcheck disable=SC2312</span>
+<span class="linenos">6</span>
+</pre></div>
+</div>
+<p>This code may be used in the <strong>homebrew</strong> development environment. The comments
+are ignored when actually in use by a user.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="nb">set</span> <span class="o">-</span><span class="n">u</span>
+</pre></div>
+</div>
+<p>This line tells the shell to treat undefined variables as an error</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">abort</span><span class="p">()</span> <span class="p">{</span>
+<span class="linenos">2</span>  <span class="n">printf</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="s2">&quot;$@&quot;</span> <span class="o">&gt;&amp;</span><span class="mi">2</span>
+<span class="linenos">3</span>  <span class="n">exit</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>This is a general purpose abort function that displays a message as it aborts
+the installation.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1"># Fail fast with a concise message when not using bash</span>
+<span class="linenos"> 2</span><span class="c1"># Single brackets are needed here for POSIX compatibility</span>
+<span class="linenos"> 3</span><span class="c1"># shellcheck disable=SC2292</span>
+<span class="linenos"> 4</span><span class="k">if</span> <span class="p">[</span> <span class="o">-</span><span class="n">z</span> <span class="s2">&quot;$</span><span class="si">{BASH_VERSION:-}</span><span class="s2">&quot;</span> <span class="p">]</span>
+<span class="linenos"> 5</span><span class="n">then</span>
+<span class="linenos"> 6</span>  <span class="n">abort</span> <span class="s2">&quot;Bash is required to interpret this script.&quot;</span>
+<span class="linenos"> 7</span><span class="n">fi</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span><span class="c1"># Check if script is run with force-interactive mode in CI</span>
+<span class="linenos">10</span><span class="k">if</span> <span class="p">[[</span> <span class="o">-</span><span class="n">n</span> <span class="s2">&quot;${CI-}&quot;</span> <span class="o">&amp;&amp;</span> <span class="o">-</span><span class="n">n</span> <span class="s2">&quot;${INTERACTIVE-}&quot;</span> <span class="p">]]</span>
+<span class="linenos">11</span><span class="n">then</span>
+<span class="linenos">12</span>  <span class="n">abort</span> <span class="s2">&quot;Cannot run force-interactive mode in CI.&quot;</span>
+<span class="linenos">13</span><span class="n">fi</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span><span class="c1"># Check if both `INTERACTIVE` and `NONINTERACTIVE` are set</span>
+<span class="linenos">16</span><span class="c1"># Always use single-quoted strings with `exp` expressions</span>
+<span class="linenos">17</span><span class="c1"># shellcheck disable=SC2016</span>
+<span class="linenos">18</span><span class="k">if</span> <span class="p">[[</span> <span class="o">-</span><span class="n">n</span> <span class="s2">&quot;${INTERACTIVE-}&quot;</span> <span class="o">&amp;&amp;</span> <span class="o">-</span><span class="n">n</span> <span class="s2">&quot;${NONINTERACTIVE-}&quot;</span> <span class="p">]]</span>
+<span class="linenos">19</span><span class="n">then</span>
+<span class="linenos">20</span>  <span class="n">abort</span> <span class="s1">&#39;Both `$INTERACTIVE` and `$NONINTERACTIVE` are set. Please unset at least one variable and try again.&#39;</span>
+<span class="linenos">21</span><span class="n">fi</span>
+<span class="linenos">22</span>
+<span class="linenos">23</span><span class="c1"># Check if script is run in POSIX mode</span>
+<span class="linenos">24</span><span class="k">if</span> <span class="p">[[</span> <span class="o">-</span><span class="n">n</span> <span class="s2">&quot;${POSIXLY_CORRECT+1}&quot;</span> <span class="p">]]</span>
+<span class="linenos">25</span><span class="n">then</span>
+<span class="linenos">26</span>  <span class="n">abort</span> <span class="s1">&#39;Bash must not run in POSIX mode. Please unset POSIXLY_CORRECT and try again.&#39;</span>
+<span class="linenos">27</span><span class="n">fi</span>
+</pre></div>
+</div>
+<p>Check the environment variables to make sure we are running properly. This code
+is not needed in the <em>ansible</em> code.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span># string formatters
+<span class="linenos"> 2</span>if [[ -t 1 ]]
+<span class="linenos"> 3</span>then
+<span class="linenos"> 4</span>  tty_escape() { printf &quot;\033[%sm&quot; &quot;$1&quot;; }
+<span class="linenos"> 5</span>else
+<span class="linenos"> 6</span>  tty_escape() { :; }
+<span class="linenos"> 7</span>fi
+<span class="linenos"> 8</span>tty_mkbold() { tty_escape &quot;1;$1&quot;; }
+<span class="linenos"> 9</span>tty_underline=&quot;$(tty_escape &quot;4;39&quot;)&quot;
+<span class="linenos">10</span>tty_blue=&quot;$(tty_mkbold 34)&quot;
+<span class="linenos">11</span>tty_red=&quot;$(tty_mkbold 31)&quot;
+<span class="linenos">12</span>tty_bold=&quot;$(tty_mkbold 39)&quot;
+<span class="linenos">13</span>tty_reset=&quot;$(tty_escape 0)&quot;
+<span class="linenos">14</span>
+<span class="linenos">15</span>shell_join() {
+<span class="linenos">16</span>  local arg
+<span class="linenos">17</span>  printf &quot;%s&quot; &quot;$1&quot;
+<span class="linenos">18</span>  shift
+<span class="linenos">19</span>  for arg in &quot;$@&quot;
+<span class="linenos">20</span>  do
+<span class="linenos">21</span>    printf &quot; &quot;
+<span class="linenos">22</span>    printf &quot;%s&quot; &quot;${arg// /\ }&quot;
+<span class="linenos">23</span>  done
+<span class="linenos">24</span>}
+<span class="linenos">25</span>
+<span class="linenos">26</span>chomp() {
+<span class="linenos">27</span>  printf &quot;%s&quot; &quot;${1/&quot;$&#39;\n&#39;&quot;/}&quot;
+<span class="linenos">28</span>}
+<span class="linenos">29</span>
+<span class="linenos">30</span>ohai() {
+<span class="linenos">31</span>  printf &quot;${tty_blue}==&gt;${tty_bold} %s${tty_reset}\n&quot; &quot;$(shell_join &quot;$@&quot;)&quot;
+<span class="linenos">32</span>}
+<span class="linenos">33</span>
+<span class="linenos">34</span>warn() {
+<span class="linenos">35</span>  printf &quot;${tty_red}Warning${tty_reset}: %s\n&quot; &quot;$(chomp &quot;$1&quot;)&quot; &gt;&amp;2
+<span class="linenos">36</span>}
+</pre></div>
+</div>
+<p>All of the above code is designed to enhance the outputs of the script. This
+code has nothing to do with the actual installation.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span>usage() {
+<span class="linenos"> 2</span>  cat &lt;&lt;EOS
+<span class="linenos"> 3</span>Homebrew Installer
+<span class="linenos"> 4</span>Usage: [NONINTERACTIVE=1] [CI=1] install.sh [options]
+<span class="linenos"> 5</span>    -h, --help       Display this message.
+<span class="linenos"> 6</span>    NONINTERACTIVE   Install without prompting for user input
+<span class="linenos"> 7</span>    CI               Install in CI mode (e.g. do not prompt for user input)
+<span class="linenos"> 8</span>EOS
+<span class="linenos"> 9</span>  exit &quot;${1:-0}&quot;
+<span class="linenos">10</span>}
+<span class="linenos">11</span>
+<span class="linenos">12</span>while [[ $# -gt 0 ]]
+<span class="linenos">13</span>do
+<span class="linenos">14</span>  case &quot;$1&quot; in
+<span class="linenos">15</span>    -h | --help) usage ;;
+<span class="linenos">16</span>    *)
+<span class="linenos">17</span>      warn &quot;Unrecognized option: &#39;$1&#39;&quot;
+<span class="linenos">18</span>      usage 1
+<span class="linenos">19</span>      ;;
+<span class="linenos">20</span>  esac
+<span class="linenos">21</span>done
+<span class="linenos">22</span>
+<span class="linenos">23</span># Check if script is run non-interactively (e.g. CI)
+<span class="linenos">24</span># If it is run non-interactively we should not prompt for passwords.
+<span class="linenos">25</span># Always use single-quoted strings with `exp` expressions
+<span class="linenos">26</span># shellcheck disable=SC2016
+<span class="linenos">27</span>if [[ -z &quot;${NONINTERACTIVE-}&quot; ]]
+<span class="linenos">28</span>then
+<span class="linenos">29</span>  if [[ -n &quot;${CI-}&quot; ]]
+<span class="linenos">30</span>  then
+<span class="linenos">31</span>    warn &#39;Running in non-interactive mode because `$CI` is set.&#39;
+<span class="linenos">32</span>    NONINTERACTIVE=1
+<span class="linenos">33</span>  elif [[ ! -t 0 ]]
+<span class="linenos">34</span>  then
+<span class="linenos">35</span>    if [[ -z &quot;${INTERACTIVE-}&quot; ]]
+<span class="linenos">36</span>    then
+<span class="linenos">37</span>      warn &#39;Running in non-interactive mode because `stdin` is not a TTY.&#39;
+<span class="linenos">38</span>      NONINTERACTIVE=1
+<span class="linenos">39</span>    else
+<span class="linenos">40</span>      warn &#39;Running in interactive mode despite `stdin` not being a TTY because `$INTERACTIVE` is set.&#39;
+<span class="linenos">41</span>    fi
+<span class="linenos">42</span>  fi
+<span class="linenos">43</span>else
+<span class="linenos">44</span>  ohai &#39;Running in non-interactive mode because `$NONINTERACTIVE` is set.&#39;
+<span class="linenos">45</span>fi
+<span class="linenos">46</span>
+<span class="linenos">47</span># USER isn&#39;t always set so provide a fall back for the installer and subprocesses.
+<span class="linenos">48</span>if [[ -z &quot;${USER-}&quot; ]]
+<span class="linenos">49</span>then
+<span class="linenos">50</span>  USER=&quot;$(chomp &quot;$(id -un)&quot;)&quot;
+<span class="linenos">51</span>  export USER
+<span class="linenos">52</span>fi
+</pre></div>
+</div>
+<p>This block of code checks to see how the script is being run. It ends by setting
+<strong>USER</strong> to the system account name of the user who runs the script. That user
+should have <strong>sudo</strong> privileges, and the script will ask for the password when
+it is needed.</p>
+<p>At this point the real work of the installer begins. The first thing done is to
+check to see if the installer is running on Mac or Linux. You can install on
+Intel or Arm64 Mac systems, and Intel systems for Linux.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1"># First check OS.</span>
+<span class="linenos"> 2</span><span class="n">OS</span><span class="o">=</span><span class="s2">&quot;$(uname)&quot;</span>
+<span class="linenos"> 3</span><span class="k">if</span> <span class="p">[[</span> <span class="s2">&quot;$</span><span class="si">{OS}</span><span class="s2">&quot;</span> <span class="o">==</span> <span class="s2">&quot;Linux&quot;</span> <span class="p">]]</span>
+<span class="linenos"> 4</span><span class="n">then</span>
+<span class="linenos"> 5</span>  <span class="n">HOMEBREW_ON_LINUX</span><span class="o">=</span><span class="mi">1</span>
+<span class="linenos"> 6</span><span class="k">elif</span> <span class="p">[[</span> <span class="s2">&quot;$</span><span class="si">{OS}</span><span class="s2">&quot;</span> <span class="o">==</span> <span class="s2">&quot;Darwin&quot;</span> <span class="p">]]</span>
+<span class="linenos"> 7</span><span class="n">then</span>
+<span class="linenos"> 8</span>  <span class="n">HOMEBREW_ON_MACOS</span><span class="o">=</span><span class="mi">1</span>
+<span class="linenos"> 9</span><span class="k">else</span>
+<span class="linenos">10</span>  <span class="n">abort</span> <span class="s2">&quot;Homebrew is only supported on macOS and Linux.&quot;</span>
+<span class="linenos">11</span><span class="n">fi</span>
+</pre></div>
+</div>
+<p>For Mac installs, the script checks to see if the machine is a new, Apple
+Silicon machine. If so, it is based on <strong>arm64</strong> and not Intel <strong>x86-64</strong>. This
+determines where <em>Homebrew</em> will be installed.</p>
+<p>The key variable set here is <strong>HOMEBREW_PREFIX</strong>, which we will need to set as a
+variable in the <em>Ansible role. Note that the Homebrew repository, which we will
+have to clone from *GitHub</em>, is located in the <strong>HOMEBREW_REPOSITORY</strong>
+directory.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1"># Required installation paths. To install elsewhere (which is unsupported)</span>
+<span class="linenos"> 2</span><span class="c1"># you can untar https://github.com/Homebrew/brew/tarball/master</span>
+<span class="linenos"> 3</span><span class="c1"># anywhere you like.</span>
+<span class="linenos"> 4</span><span class="k">if</span> <span class="p">[[</span> <span class="o">-</span><span class="n">n</span> <span class="s2">&quot;${HOMEBREW_ON_MACOS-}&quot;</span> <span class="p">]]</span>
+<span class="linenos"> 5</span><span class="n">then</span>
+<span class="linenos"> 6</span>  <span class="n">UNAME_MACHINE</span><span class="o">=</span><span class="s2">&quot;$(/usr/bin/uname -m)&quot;</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span>  <span class="k">if</span> <span class="p">[[</span> <span class="s2">&quot;$</span><span class="si">{UNAME_MACHINE}</span><span class="s2">&quot;</span> <span class="o">==</span> <span class="s2">&quot;arm64&quot;</span> <span class="p">]]</span>
+<span class="linenos"> 9</span>  <span class="n">then</span>
+<span class="linenos">10</span>    <span class="c1"># On ARM macOS, this script installs to /opt/homebrew only</span>
+<span class="linenos">11</span>    <span class="n">HOMEBREW_PREFIX</span><span class="o">=</span><span class="s2">&quot;/opt/homebrew&quot;</span>
+<span class="linenos">12</span>    <span class="n">HOMEBREW_REPOSITORY</span><span class="o">=</span><span class="s2">&quot;$</span><span class="si">{HOMEBREW_PREFIX}</span><span class="s2">&quot;</span>
+<span class="linenos">13</span>  <span class="k">else</span>
+<span class="linenos">14</span>    <span class="c1"># On Intel macOS, this script installs to /usr/local only</span>
+<span class="linenos">15</span>    <span class="n">HOMEBREW_PREFIX</span><span class="o">=</span><span class="s2">&quot;/usr/local&quot;</span>
+<span class="linenos">16</span>    <span class="n">HOMEBREW_REPOSITORY</span><span class="o">=</span><span class="s2">&quot;$</span><span class="si">{HOMEBREW_PREFIX}</span><span class="s2">/Homebrew&quot;</span>
+<span class="linenos">17</span>  <span class="n">fi</span>
+<span class="linenos">18</span>  <span class="n">HOMEBREW_CACHE</span><span class="o">=</span><span class="s2">&quot;$</span><span class="si">{HOME}</span><span class="s2">/Library/Caches/Homebrew&quot;</span>
+</pre></div>
+</div>
+<p>This block sets up the location of the installation, defined by
+<strong>HOMEBREW_PREFIX</strong>.</p>
+<p>This next block sets up shortcuts used to set owner and group for files
+installed later.</p>
+<p>This same block is repeated in case the installation is on a Linux machine:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span>  <span class="n">STAT_PRINTF</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;/usr/bin/stat&quot;</span> <span class="s2">&quot;-f&quot;</span><span class="p">)</span>
+<span class="linenos"> 2</span>  <span class="n">PERMISSION_FORMAT</span><span class="o">=</span><span class="s2">&quot;%A&quot;</span>
+<span class="linenos"> 3</span>  <span class="n">CHOWN</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;/usr/sbin/chown&quot;</span><span class="p">)</span>
+<span class="linenos"> 4</span>  <span class="n">CHGRP</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;/usr/bin/chgrp&quot;</span><span class="p">)</span>
+<span class="linenos"> 5</span>  <span class="n">GROUP</span><span class="o">=</span><span class="s2">&quot;admin&quot;</span>
+<span class="linenos"> 6</span>  <span class="n">TOUCH</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;/usr/bin/touch&quot;</span><span class="p">)</span>
+<span class="linenos"> 7</span>  <span class="n">INSTALL</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;/usr/bin/install&quot;</span> <span class="o">-</span><span class="n">d</span> <span class="o">-</span><span class="n">o</span> <span class="s2">&quot;root&quot;</span> <span class="o">-</span><span class="n">g</span> <span class="s2">&quot;wheel&quot;</span> <span class="o">-</span><span class="n">m</span> <span class="s2">&quot;0755&quot;</span><span class="p">)</span>
+<span class="linenos"> 8</span><span class="k">else</span>
+<span class="linenos"> 9</span>  <span class="n">UNAME_MACHINE</span><span class="o">=</span><span class="s2">&quot;$(uname -m)&quot;</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span>  <span class="c1"># On Linux, this script installs to /home/linuxbrew/.linuxbrew only</span>
+<span class="linenos">12</span>  <span class="n">HOMEBREW_PREFIX</span><span class="o">=</span><span class="s2">&quot;/home/linuxbrew/.linuxbrew&quot;</span>
+<span class="linenos">13</span>  <span class="n">HOMEBREW_REPOSITORY</span><span class="o">=</span><span class="s2">&quot;$</span><span class="si">{HOMEBREW_PREFIX}</span><span class="s2">/Homebrew&quot;</span>
+<span class="linenos">14</span>  <span class="n">HOMEBREW_CACHE</span><span class="o">=</span><span class="s2">&quot;$</span><span class="si">{HOME}</span><span class="s2">/.cache/Homebrew&quot;</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span>  <span class="n">STAT_PRINTF</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;/usr/bin/stat&quot;</span> <span class="s2">&quot;--printf&quot;</span><span class="p">)</span>
+<span class="linenos">17</span>  <span class="n">PERMISSION_FORMAT</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%a</span><span class="s2">&quot;</span>
+<span class="linenos">18</span>  <span class="n">CHOWN</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;/bin/chown&quot;</span><span class="p">)</span>
+<span class="linenos">19</span>  <span class="n">CHGRP</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;/bin/chgrp&quot;</span><span class="p">)</span>
+<span class="linenos">20</span>  <span class="n">GROUP</span><span class="o">=</span><span class="s2">&quot;$(id -gn)&quot;</span>
+<span class="linenos">21</span>  <span class="n">TOUCH</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;/bin/touch&quot;</span><span class="p">)</span>
+<span class="linenos">22</span>  <span class="n">INSTALL</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;/usr/bin/install&quot;</span> <span class="o">-</span><span class="n">d</span> <span class="o">-</span><span class="n">o</span> <span class="s2">&quot;$</span><span class="si">{USER}</span><span class="s2">&quot;</span> <span class="o">-</span><span class="n">g</span> <span class="s2">&quot;$</span><span class="si">{GROUP}</span><span class="s2">&quot;</span> <span class="o">-</span><span class="n">m</span> <span class="s2">&quot;0755&quot;</span><span class="p">)</span>
+<span class="linenos">23</span><span class="n">fi</span>
+<span class="linenos">24</span><span class="n">CHMOD</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;/bin/chmod&quot;</span><span class="p">)</span>
+<span class="linenos">25</span><span class="n">MKDIR</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;/bin/mkdir&quot;</span> <span class="s2">&quot;-p&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Next, we set the locations of the Homebrew repositories:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">HOMEBREW_BREW_DEFAULT_GIT_REMOTE</span><span class="o">=</span><span class="s2">&quot;https://github.com/Homebrew/brew&quot;</span>
+<span class="linenos">2</span><span class="n">HOMEBREW_CORE_DEFAULT_GIT_REMOTE</span><span class="o">=</span><span class="s2">&quot;https://github.com/Homebrew/homebrew-core&quot;</span>
+</pre></div>
+</div>
+<p>With these definitions in place, the locations of the repositories are set as
+environment variables:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span># Use remote URLs of Homebrew repositories from environment if set.
+<span class="linenos"> 2</span>HOMEBREW_BREW_GIT_REMOTE=&quot;${HOMEBREW_BREW_GIT_REMOTE:-&quot;${HOMEBREW_BREW_DEFAULT_GIT_REMOTE}&quot;}&quot;
+<span class="linenos"> 3</span>HOMEBREW_CORE_GIT_REMOTE=&quot;${HOMEBREW_CORE_GIT_REMOTE:-&quot;${HOMEBREW_CORE_DEFAULT_GIT_REMOTE}&quot;}&quot;
+<span class="linenos"> 4</span># The URLs with and without the &#39;.git&#39; suffix are the same Git remote. Do not prompt.
+<span class="linenos"> 5</span>if [[ &quot;${HOMEBREW_BREW_GIT_REMOTE}&quot; == &quot;${HOMEBREW_BREW_DEFAULT_GIT_REMOTE}.git&quot; ]]
+<span class="linenos"> 6</span>then
+<span class="linenos"> 7</span>  HOMEBREW_BREW_GIT_REMOTE=&quot;${HOMEBREW_BREW_DEFAULT_GIT_REMOTE}&quot;
+<span class="linenos"> 8</span>fi
+<span class="linenos"> 9</span>if [[ &quot;${HOMEBREW_CORE_GIT_REMOTE}&quot; == &quot;${HOMEBREW_CORE_DEFAULT_GIT_REMOTE}.git&quot; ]]
+<span class="linenos">10</span>then
+<span class="linenos">11</span>  HOMEBREW_CORE_GIT_REMOTE=&quot;${HOMEBREW_CORE_DEFAULT_GIT_REMOTE}&quot;
+<span class="linenos">12</span>fi
+<span class="linenos">13</span>export HOMEBREW_{BREW,CORE}_GIT_REMOTE
+</pre></div>
+</div>
+<p>Homebrew currently is supported for versions 13.0 through 16.0:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">REQUIRED_CURL_VERSION</span><span class="o">=</span><span class="mf">7.41.0</span> <span class="c1"># HOMEBREW_MINIMUM_CURL_VERSION in brew.sh in Homebrew/brew</span>
+<span class="linenos">2</span><span class="n">REQUIRED_GIT_VERSION</span><span class="o">=</span><span class="mf">2.7.0</span>   <span class="c1"># HOMEBREW_MINIMUM_GIT_VERSION in brew.sh in Homebrew/brew</span>
+</pre></div>
+</div>
+<p>Apparently, analytics are collected in development. They are turned off during
+user installs:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">export</span> <span class="n">HOMEBREW_NO_ANALYTICS_THIS_RUN</span><span class="o">=</span><span class="mi">1</span>
+<span class="linenos">2</span><span class="n">export</span> <span class="n">HOMEBREW_NO_ANALYTICS_MESSAGE_OUTPUT</span><span class="o">=</span><span class="mi">1</span>
+</pre></div>
+</div>
+<p>Since sudo access is required for the instalation, the next block sets up a
+function that make sure this capability is available:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span>unset HAVE_SUDO_ACCESS # unset this from the environment
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span>have_sudo_access() {
+<span class="linenos"> 4</span>  if [[ ! -x &quot;/usr/bin/sudo&quot; ]]
+<span class="linenos"> 5</span>  then
+<span class="linenos"> 6</span>    return 1
+<span class="linenos"> 7</span>  fi
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span>  local -a SUDO=(&quot;/usr/bin/sudo&quot;)
+<span class="linenos">10</span>  if [[ -n &quot;${SUDO_ASKPASS-}&quot; ]]
+<span class="linenos">11</span>  then
+<span class="linenos">12</span>    SUDO+=(&quot;-A&quot;)
+<span class="linenos">13</span>  elif [[ -n &quot;${NONINTERACTIVE-}&quot; ]]
+<span class="linenos">14</span>  then
+<span class="linenos">15</span>    SUDO+=(&quot;-n&quot;)
+<span class="linenos">16</span>  fi
+<span class="linenos">17</span>
+<span class="linenos">18</span>  if [[ -z &quot;${HAVE_SUDO_ACCESS-}&quot; ]]
+<span class="linenos">19</span>  then
+<span class="linenos">20</span>    if [[ -n &quot;${NONINTERACTIVE-}&quot; ]]
+<span class="linenos">21</span>    then
+<span class="linenos">22</span>      &quot;${SUDO[@]}&quot; -l mkdir &amp;&gt;/dev/null
+<span class="linenos">23</span>    else
+<span class="linenos">24</span>      &quot;${SUDO[@]}&quot; -v &amp;&amp; &quot;${SUDO[@]}&quot; -l mkdir &amp;&gt;/dev/null
+<span class="linenos">25</span>    fi
+<span class="linenos">26</span>    HAVE_SUDO_ACCESS=&quot;$?&quot;
+<span class="linenos">27</span>  fi
+<span class="linenos">28</span>
+<span class="linenos">29</span>  if [[ -n &quot;${HOMEBREW_ON_MACOS-}&quot; ]] &amp;&amp; [[ &quot;${HAVE_SUDO_ACCESS}&quot; -ne 0 ]]
+<span class="linenos">30</span>  then
+<span class="linenos">31</span>    abort &quot;Need sudo access on macOS (e.g. the user ${USER} needs to be an Administrator)!&quot;
+<span class="linenos">32</span>  fi
+<span class="linenos">33</span>
+<span class="linenos">34</span>  return &quot;${HAVE_SUDO_ACCESS}&quot;
+<span class="linenos">35</span>}
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="my-development-workflow.html" class="btn btn-neutral float-left" title="My Development Workflow" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ansible-testing-on-github.html" class="btn btn-neutral float-right" title="Ansible Testing on Github" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Roie R. Black.
+      <span class="lastupdated">Last updated on Feb 17, 2025.
+      </span></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

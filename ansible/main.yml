@@ -21,8 +21,6 @@
       become: true
 
   roles:
-    - homebrew
-    - macvim
-
+    - geerlingguy.homebrew
 
 
